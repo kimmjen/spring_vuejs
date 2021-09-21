@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
+	<!-- jdbc connector를 가져올 때 드라이버 가져오는 부분의 설정 -->
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<!-- 내 아이피와 사용하는 DB를 설정하는 부분 -->
+		<property name="url" value="jdbc:mysql://127.0.0.1:3306/study_board?serverTimezone=Asia/Seoul" />
+		<property name="username" value="test02" />
+		<property name="password" value="1111" />
+	</bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:/mybatis-config.xml" />
+		<property name="mapperLocations" value="classpath:mappers/**/*Mapper.xml" />
+	</bean>
+	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<context:component-scan base-package="com.kimmjen.domain" />
+	<context:component-scan base-package="com.kimmjen.dao" />
+	<context:component-scan base-package="com.kimmjen.service" />
+	
+</beans>
